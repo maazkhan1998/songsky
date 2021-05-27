@@ -39,6 +39,7 @@ dependencies:
   font_awesome_flutter:
   image_picker: ^0.7.5+3
   persistent_bottom_nav_bar: ^4.0.2
+  paginate_firestore:
   
 
 

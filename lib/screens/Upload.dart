@@ -96,7 +96,8 @@ double progress=0;
           'song_url':songURL,
           'image_url':image==null?defaultSongImage:imageURL,
           'skycoins':0,
-          'userID':Provider.of<AuthenticationService>(context,listen:false).user.id
+          'userID':Provider.of<AuthenticationService>(context,listen:false).user.id,
+          'date':DateTime.now().toIso8601String()
         });
         Navigator.of(context,rootNavigator: true).pop();
         setState((){

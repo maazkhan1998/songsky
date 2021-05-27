@@ -8,6 +8,7 @@ class SongModel{
   final int coins;
   final String songName;
   final String userID;
+  final String date;
 
   SongModel({
     required this.artistName,
@@ -16,7 +17,8 @@ class SongModel{
     required this.songURL,
     required this.coins,
     required this.songName,
-    required this.userID 
+    required this.userID,
+    required this.date
   });
 
   factory SongModel.fromDocument(DocumentSnapshot doc){
@@ -27,7 +29,8 @@ class SongModel{
       songURL: doc['song_url'],
       coins: doc['skycoins'],
       songName: doc['song_name'],
-      userID: doc['userID']
+      userID: doc['userID'],
+      date: doc['date']
     );
   }
 }
