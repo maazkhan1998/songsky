@@ -48,7 +48,10 @@ class AuthenticationWrapper extends StatelessWidget {
     if(!user.emailVerified){
       Fluttertoast.showToast(msg: 'Email not verified');
       return SignInPage();
-    }else return HomePage();
+    }else{
+      Provider.of<AuthenticationService>(context).getUser();
+      return HomePage();
+       }
 
   }
 }

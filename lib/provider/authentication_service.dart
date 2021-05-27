@@ -24,10 +24,6 @@ class AuthenticationService with ChangeNotifier {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      if(_firebaseAuth.currentUser!.emailVerified){
-      final data= await firestore.FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).get();
-      user=CurrentUser.fromDocument(data);
-      }
       notifyListeners();
     } on FirebaseAuthException catch (e) {
       throw e.message!;
@@ -35,6 +31,11 @@ class AuthenticationService with ChangeNotifier {
     on SocketException catch (e){
       throw e;
     }
+  }
+
+  getUser()async{
+    final data= await firestore.FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).get();
+      user=CurrentUser.fromDocument(data);
   }
 
 

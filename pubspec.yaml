@@ -29,7 +29,7 @@ dependencies:
   file_picker:  
   cloud_firestore:
   audioplayers: ^0.19.0 
-  provider: 
+  provider: ^5.0.0 
   flutter_bloc: 
   in_app_purchase: 
   material_design_icons_flutter:
@@ -38,6 +38,7 @@ dependencies:
   flutter_screenutil:
   font_awesome_flutter:
   image_picker: ^0.7.5+3
+  persistent_bottom_nav_bar: ^4.0.2
   
 
 
