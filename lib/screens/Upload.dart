@@ -130,56 +130,62 @@ double progress=0;
   @override
   Widget build(BuildContext context) {
     themeData=Theme.of(context);
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        children: <Widget>[
-          GestureDetector(
-            onTap: selectimage,
-                      child: Container(
-                        alignment: Alignment.center,
-              height: ScreenUtil().setHeight(175),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.black,width: 1
-                )
-              ),
-              child: image==null?Center(child: Text('Select image')):
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.file(image!,fit: BoxFit.fill,height:ScreenUtil().setHeight(175),width: double.infinity,))
-            ),
-          ),
-          SizedBox(height: ScreenUtil().setHeight(10)),
-          GestureDetector(
-              onTap:selectsong ,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal:10),
-                height: ScreenUtil().setHeight(40),
-                width: ScreenUtil().setWidth(175),
-                decoration: BoxDecoration(
-                  color:themeData.colorScheme.primary ,
-                  borderRadius: BorderRadius.circular(5)
+    return Scaffold(
+          body: SafeArea(
+                      child: Center(
+                        child: SingleChildScrollView(
+        padding: EdgeInsets.all(20),
+        child: Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: selectimage,
+                            child: Container(
+                              alignment: Alignment.center,
+                  height: ScreenUtil().setHeight(175),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: Colors.black,width: 1
+                    )
+                  ),
+                  child: image==null?Center(child: Text('Select image')):
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(image!,fit: BoxFit.fill,height:ScreenUtil().setHeight(175),width: double.infinity,))
                 ),
-                alignment: Alignment.center,
-                child:song==null? Text('Select song'):Text(song!.name,maxLines: 1,overflow: TextOverflow.ellipsis,),
               ),
-            ),
-          EmailNameTextField(text: 'Enter song name', controller: songname, type: TextInputType.name, icon: Icon(
-            MdiIcons.music
-          )),
-          EmailNameTextField(text: 'Enter artist name', controller: artistname, type: TextInputType.name, icon: Icon(
-            Icons.mic
-          )),
-          SizedBox(height:ScreenUtil().setHeight(20)),
-          LinearProgressIndicator(
-            value: progress
+              SizedBox(height: ScreenUtil().setHeight(10)),
+              GestureDetector(
+                  onTap:selectsong ,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal:10),
+                    height: ScreenUtil().setHeight(40),
+                    width: ScreenUtil().setWidth(175),
+                    decoration: BoxDecoration(
+                        color:themeData.colorScheme.primary ,
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    alignment: Alignment.center,
+                    child:song==null? Text('Select song'):Text(song!.name,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                  ),
+                ),
+              EmailNameTextField(text: 'Enter song name', controller: songname, type: TextInputType.name, icon: Icon(
+                MdiIcons.music
+              )),
+              EmailNameTextField(text: 'Enter artist name', controller: artistname, type: TextInputType.name, icon: Icon(
+                Icons.mic
+              )),
+              SizedBox(height:ScreenUtil().setHeight(20)),
+              LinearProgressIndicator(
+                value: progress
+              ),
+              OnSubmitButton(func: finalupload, text: 'Upload'),
+            ],
+      ),
+      ),
+                      ),
           ),
-          OnSubmitButton(func: finalupload, text: 'Upload'),
-        ],
-    ),
     );
   }
 }

@@ -4,8 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:new_clean/provider/authentication_service.dart';
-import 'package:new_clean/home_page.dart';
+import 'package:new_clean/screens/Home.dart';
 import 'package:new_clean/sign_in_page.dart';
+import 'package:new_clean/utils/SizeConfig.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async{
@@ -43,6 +44,7 @@ class AuthenticationWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MySize().init(context);
     final user = Provider.of<AuthenticationService>(context).currentUser;
     if(user==null)return SignInPage();
     if(!user.emailVerified){
@@ -50,7 +52,7 @@ class AuthenticationWrapper extends StatelessWidget {
       return SignInPage();
     }else{
       Provider.of<AuthenticationService>(context).getUser();
-      return HomePage();
+      return Home();
        }
 
   }
