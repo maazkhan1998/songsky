@@ -1,0 +1,38 @@
+{
+    "provider": "google_pay",
+    "data": {
+      "environment": "TEST",
+      "apiVersion": 2,
+      "apiVersionMinor": 0,
+      "allowedPaymentMethods": [
+        {
+          "type": "CARD",
+          "tokenizationSpecification": {
+            "type": "PAYMENT_GATEWAY",
+            "parameters": {
+              "gateway": "stripe",
+              "stripe:version": "2018-10-31",
+              "stripe:publishableKey": "pk_test_51IxAkhIkGfBm1V7RKg0TEnMlbriAL0kc9tLcJFxFO9VMjRqjUD0WhBwUpZIcMWVdXCbdDH0yY8RSHJ6coZCbLUJT00PFZN6xrk"
+            }
+          },
+          "parameters": {
+            "allowedCardNetworks": ["VISA", "MASTERCARD"],
+            "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+            "billingAddressRequired": true,
+            "billingAddressParameters": {
+              "format": "FULL",
+              "phoneNumberRequired": true
+            }
+          }
+        }
+      ],
+      "merchantInfo": {
+        "merchantId": "BCR2DN6TR64Y74YB",
+        "merchantName": "Song Sky Ltd"
+      },
+      "transactionInfo": {
+        "countryCode": "CA",
+        "currencyCode": "CAD"
+      }
+    }
+  }

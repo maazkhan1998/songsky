@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     physics: ClampingScrollPhysics(),
                     itemBuilder: (context,i)=>GestureDetector(
                       onTap: ()=>Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_)=>Songspage(song: songs[i])
+                        builder: (_)=>Container()
                       )),
                       child: SingleTrackWidget(song: songs[i])),
                      separatorBuilder:(context,i)=>SizedBox(height:ScreenUtil().setHeight(10)),

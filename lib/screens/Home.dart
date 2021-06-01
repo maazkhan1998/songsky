@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
             return GestureDetector(
               onTap: ()=>Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_)=>Songspage(song: song)
+                  builder: (_)=>Songspage(song: song,)
                 )
               ),
               child: SingleTrackWidget(song: song,));

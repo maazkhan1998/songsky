@@ -39,7 +39,7 @@ dependencies:
   font_awesome_flutter:
   image_picker: ^0.7.5+3
   paginate_firestore:
-  flutter_pay: ^1.0.1
+  pay: ^1.0.3
   
 
 
@@ -58,6 +58,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
