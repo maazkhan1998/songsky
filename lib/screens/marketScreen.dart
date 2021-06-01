@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:new_clean/provider/authentication_service.dart';
+import 'package:new_clean/widgets/dialogs.dart';
 import 'package:new_clean/widgets/emailNameTextField.dart';
 import 'package:pay/pay.dart';
+import 'package:provider/provider.dart';
 
 class MarketScreen extends StatefulWidget {
   @override
@@ -21,18 +24,33 @@ class _MarketScreenState extends State<MarketScreen> {
 
 bool isNumeric(String s) {
 
- return double.tryParse(s) != null;
+ return int.tryParse(s) != null;
 }
 
 
  onGooglePayPressed() async {
   if(!isNumeric(controller.text)) return Fluttertoast.showToast(msg: 'Invalid input');
-  if(double.parse(controller.text)<1203) return Fluttertoast.showToast(msg: 'Minimum limit is 1203 coins');
-  final result = await _payClient.showPaymentSelector(
+  if(int.parse(controller.text)<100) return Fluttertoast.showToast(msg: 'Minimum limit is 100 coins');
+  final  result = await _payClient.showPaymentSelector(
     provider: PayProvider.google_pay,
-    paymentItems: [],
+    paymentItems: [PaymentItem(amount: '',label: ''
+    ,status: PaymentItemStatus.final_price)],
   );
-  // Send the resulting Google Pay token to your server / PSP
+  print(result);
+  try{
+  print(result);
+  // if(result!=null){
+  //   progressIndicator(context);
+  //   String token=result['paymentMethodData']['tokenizationData']['token']['id'];
+  //   print(token);
+  //   await Provider.of<AuthenticationService>(context,listen:false).stripAPI(controller.text, token);
+  //   Navigator.of(context,rootNavigator: true).pop();
+  // }
+   }
+   catch(e){
+     Navigator.of(context,rootNavigator: true).pop();
+     customErrorDialog(context,'Something went wrong',e.toString());
+   }
 }
 
   @override
@@ -47,7 +65,7 @@ bool isNumeric(String s) {
             children: [
               EmailNameTextField(text: 'Coins', controller: controller, type: TextInputType.number, icon: Icon(FontAwesomeIcons.coins)),
               SizedBox(height: ScreenUtil().setHeight(10)),
-              Text('1 coin=0.01 CAD')
+              Text('1 coin=0.011 CAD')
             ],
           ),
         ),

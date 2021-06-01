@@ -4,8 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebaseStorage;
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_clean/const.dart';
 import 'package:new_clean/model/userModel.dart';
+import 'package:http/http.dart' as http;
 
 class AuthenticationService with ChangeNotifier {
    FirebaseAuth _firebaseAuth=FirebaseAuth.instance;
@@ -50,7 +52,8 @@ class AuthenticationService with ChangeNotifier {
       }
       await firestore.FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).set({
         'name':name,'email':email,'token':0,
-        'imageURL':imageURL==null?defaultImage:imageURL
+        'imageURL':imageURL==null?defaultImage:imageURL,
+        'tokensBought':0
       });
       await _firebaseAuth.currentUser!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
@@ -58,6 +61,31 @@ class AuthenticationService with ChangeNotifier {
     }
     on SocketException catch (e){
       throw e.message;
+    }
+  }
+
+  stripAPI(String coins,String token)async{
+    try{
+      final url=Uri.parse(stripeAPI);
+      final response=await http.post(url,body: {
+    "description": "Songs sky payment",
+    "total":int.parse(coins)*0.011,
+    "token":token
+      });
+      if(response.statusCode==200){
+        Fluttertoast.showToast(msg: 'Purchase successful');
+       await firestore.FirebaseFirestore.instance.collection('users').doc(user.id).update({
+         'token':user.tokens+int.parse(coins),
+         'tokensBought':user.tokensBought+int.parse(coins)
+       });
+       await getUser();
+      }
+      else{
+        return Fluttertoast.showToast(msg: 'Something went wrong');
+      }
+    }
+    catch(e){
+      throw e;
     }
   }
 }

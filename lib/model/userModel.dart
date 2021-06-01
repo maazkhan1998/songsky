@@ -6,13 +6,15 @@ class CurrentUser{
   final String email;
   final int tokens;
   final String imageURL;
+  final int tokensBought;
 
   CurrentUser({
     required this.id,
     required this.name,
     required this.email,
     required this.tokens,
-    required this.imageURL
+    required this.imageURL,
+    required this.tokensBought
   });
 
   factory CurrentUser.fromDocument(DocumentSnapshot doc){
@@ -21,7 +23,8 @@ class CurrentUser{
       email: doc['email'],
       imageURL: doc['imageURL'],
       name: doc['name'],
-      tokens: doc['token']
+      tokens: doc['token'],
+      tokensBought:doc['tokensBought']
     );
   }
 }
