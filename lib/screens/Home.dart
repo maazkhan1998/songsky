@@ -7,7 +7,7 @@ import 'package:new_clean/model/songModel.dart';
 import 'package:new_clean/provider/authentication_service.dart';
 import 'package:new_clean/screens/Songspage.dart';
 import 'package:new_clean/screens/Upload.dart';
-import 'package:new_clean/screens/mrkt.dart';
+import 'package:new_clean/screens/marketScreen.dart';
 import 'package:new_clean/screens/profileScreen.dart';
 import 'package:new_clean/widgets/drawer_item.dart';
 import 'package:new_clean/widgets/singleTrackWidget.dart';
@@ -44,10 +44,12 @@ class _HomeState extends State<Home> {
               DrawerItem(
                 text: "Add SkyCoins",
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MarketScreen()),
-                  );},
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_)=>MarketScreen()
+                    )
+                  );
+                  },
               ),
               DrawerItem(
                 text: "Sign Out",
