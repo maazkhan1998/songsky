@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,81 +11,98 @@ import 'package:new_clean/model/userModel.dart';
 import 'package:http/http.dart' as http;
 
 class AuthenticationService with ChangeNotifier {
-   FirebaseAuth _firebaseAuth=FirebaseAuth.instance;
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-   User? get currentUser =>_firebaseAuth.currentUser;
+  User? get currentUser => _firebaseAuth.currentUser;
 
-   late CurrentUser user;
-
+  late CurrentUser user;
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
     notifyListeners();
-}
+  }
 
-  Future<void> signIn({required String email,required String password}) async {
+  Future<void> signIn({required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       notifyListeners();
     } on FirebaseAuthException catch (e) {
       throw e.message!;
-    }
-    on SocketException catch (e){
+    } on SocketException catch (e) {
       throw e;
     }
   }
 
-  getUser()async{
-    final data= await firestore.FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).get();
-      user=CurrentUser.fromDocument(data);
+  getUser() async {
+    final data = await firestore.FirebaseFirestore.instance
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .get();
+    user = CurrentUser.fromDocument(data);
   }
 
-
-  Future<void> signUp({required String email,required String password, required File? image,
- required String name}) async {
+  Future<void> signUp(
+      {required String email,
+      required String password,
+      required File? image,
+      required String name}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
       String? imageURL;
-      if(image!=null){
-      final task= await firebaseStorage.FirebaseStorage.instance.ref('users').child(_firebaseAuth.currentUser!.uid).putFile(image);
-      imageURL=await task.ref.getDownloadURL();
+      if (image != null) {
+        final task = await firebaseStorage.FirebaseStorage.instance
+            .ref('users')
+            .child(_firebaseAuth.currentUser!.uid)
+            .putFile(image);
+        imageURL = await task.ref.getDownloadURL();
       }
-      await firestore.FirebaseFirestore.instance.collection('users').doc(_firebaseAuth.currentUser!.uid).set({
-        'name':name,'email':email,'token':0,
-        'imageURL':imageURL==null?defaultImage:imageURL,
-        'tokensBought':0
+      await firestore.FirebaseFirestore.instance
+          .collection('users')
+          .doc(_firebaseAuth.currentUser!.uid)
+          .set({
+        'name': name,
+        'email': email,
+        'token': 0,
+        'imageURL': imageURL == null ? defaultImage : imageURL,
+        'tokensBought': 0
       });
       await _firebaseAuth.currentUser!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       throw e.message!;
-    }
-    on SocketException catch (e){
+    } on SocketException catch (e) {
       throw e.message;
     }
   }
 
-  stripAPI(String coins,String token)async{
-    try{
-      final url=Uri.parse(stripeAPI);
-      final response=await http.post(url,body: {
-    "description": "Songs sky payment",
-    "total":int.parse(coins)*0.011,
-    "token":token
+  stripAPI(String coins, String token) async {
+    try {
+      final url = Uri.parse(stripeAPI);
+      final quantity=double.parse(coins);
+      final total=quantity*0.011;
+      print('hello');
+      final response = await http.post(url, body: json.encode({
+        "description": "Songs sky payment",
+        "total":total,
+        "token": token
+      }),headers: {
+        'Content-Type':'application/json'
       });
-      if(response.statusCode==200){
+      if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: 'Purchase successful');
-       await firestore.FirebaseFirestore.instance.collection('users').doc(user.id).update({
-         'token':user.tokens+int.parse(coins),
-         'tokensBought':user.tokensBought+int.parse(coins)
-       });
-       await getUser();
+        await firestore.FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.id)
+            .update({
+          'token': user.tokens + int.parse(coins),
+          'tokensBought': user.tokensBought + int.parse(coins)
+        });
+        await getUser();
+      } else {
+        return Fluttertoast.showToast(msg: json.decode(response.body));
       }
-      else{
-        return Fluttertoast.showToast(msg: 'Something went wrong');
-      }
-    }
-    catch(e){
+    } catch (e) {
       throw e;
     }
   }

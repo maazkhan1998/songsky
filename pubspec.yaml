@@ -39,7 +39,7 @@ dependencies:
   font_awesome_flutter:
   image_picker: ^0.7.5+3
   paginate_firestore:
-  pay: ^1.0.3
+  pay: ^1.0.4
   http: ^0.13.3
   
 

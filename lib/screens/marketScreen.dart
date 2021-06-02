@@ -8,6 +8,7 @@ import 'package:new_clean/widgets/dialogs.dart';
 import 'package:new_clean/widgets/emailNameTextField.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class MarketScreen extends StatefulWidget {
   @override
@@ -31,21 +32,21 @@ bool isNumeric(String s) {
  onGooglePayPressed() async {
   if(!isNumeric(controller.text)) return Fluttertoast.showToast(msg: 'Invalid input');
   if(int.parse(controller.text)<100) return Fluttertoast.showToast(msg: 'Minimum limit is 100 coins');
-  final  result = await _payClient.showPaymentSelector(
+  final result = await _payClient.showPaymentSelector(
     provider: PayProvider.google_pay,
-    paymentItems: [PaymentItem(amount: '',label: ''
-    ,status: PaymentItemStatus.final_price)],
+    paymentItems: [
+      PaymentItem(amount: '${int.parse(controller.text)*0.11}',label: '${controller.text} Tokens',status: PaymentItemStatus.final_price)
+    ],
   );
-  print(result);
   try{
-  print(result);
-  // if(result!=null){
-  //   progressIndicator(context);
-  //   String token=result['paymentMethodData']['tokenizationData']['token']['id'];
-  //   print(token);
-  //   await Provider.of<AuthenticationService>(context,listen:false).stripAPI(controller.text, token);
-  //   Navigator.of(context,rootNavigator: true).pop();
-  // }
+  if(result!=null){
+    progressIndicator(context);
+    final data=result['paymentMethodData']['tokenizationData']['token'];
+    final String token=json.decode(data)['id'];
+    print(token);
+    await Provider.of<AuthenticationService>(context,listen:false).stripAPI(controller.text, token);
+    Navigator.of(context,rootNavigator: true).pop();
+  }
    }
    catch(e){
      Navigator.of(context,rootNavigator: true).pop();

@@ -412,14 +412,14 @@ packages:
       name: pay
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   pay_android:
     dependency: transitive
     description:
       name: pay_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.4"
   pay_ios:
     dependency: transitive
     description:

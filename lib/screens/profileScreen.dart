@@ -51,10 +51,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child:Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Available Points',style:TextStyle(
+                    Text('Token Bought',style:TextStyle(
                       color:Colors.white,fontSize:15,fontWeight: FontWeight.w600
                     )),
-                    Text(Provider.of<AuthenticationService>(context).user.tokens.toString(),style:TextStyle(
+                    Text(Provider.of<AuthenticationService>(context).user.tokensBought.toString(),style:TextStyle(
                       color:Colors.white,fontSize:18,fontWeight: FontWeight.w600
                     ))
                   ],
