@@ -8,7 +8,7 @@ import 'package:new_clean/provider/authentication_service.dart';
 import 'package:new_clean/screens/Songspage.dart';
 import 'package:new_clean/screens/Upload.dart';
 import 'package:new_clean/screens/allTimeRatedSongsScreen.dart';
-import 'package:new_clean/screens/dailyHighRatedSongScreen.dart';
+import 'package:new_clean/screens/ratedSongScreen.dart';
 import 'package:new_clean/screens/marketScreen.dart';
 import 'package:new_clean/screens/profileScreen.dart';
 import 'package:new_clean/widgets/drawer_item.dart';
@@ -58,7 +58,33 @@ class _HomeState extends State<Home> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_)=>DailyHighRatedSongScreen()
+                      builder: (_)=>RatedSongScreen(
+                        FirebaseFirestore.instance.collection('ratings').where('date',isLessThanOrEqualTo: DateTime.now().toIso8601String()).where('date',isGreaterThan: DateTime.now().subtract(Duration(hours: 24)).toIso8601String()).get()
+                      )
+                    )
+                  );
+                  },
+              ),
+               DrawerItem(
+                text: "Weekly rated songs",
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_)=>RatedSongScreen(
+                        FirebaseFirestore.instance.collection('ratings').where('date',isLessThanOrEqualTo: DateTime.now().toIso8601String()).where('date',isGreaterThan: DateTime.now().subtract(Duration(days: 7)).toIso8601String()).get()
+                      )
+                    )
+                  );
+                  },
+              ),
+               DrawerItem(
+                text: "Monthly rated songs",
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_)=>RatedSongScreen(
+                        FirebaseFirestore.instance.collection('ratings').where('date',isLessThanOrEqualTo: DateTime.now().toIso8601String()).where('date',isGreaterThan: DateTime.now().subtract(Duration(days: 31)).toIso8601String()).get()
+                      )
                     )
                   );
                   },
