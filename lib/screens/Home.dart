@@ -7,6 +7,8 @@ import 'package:new_clean/model/songModel.dart';
 import 'package:new_clean/provider/authentication_service.dart';
 import 'package:new_clean/screens/Songspage.dart';
 import 'package:new_clean/screens/Upload.dart';
+import 'package:new_clean/screens/allTimeRatedSongsScreen.dart';
+import 'package:new_clean/screens/dailyHighRatedSongScreen.dart';
 import 'package:new_clean/screens/marketScreen.dart';
 import 'package:new_clean/screens/profileScreen.dart';
 import 'package:new_clean/widgets/drawer_item.dart';
@@ -47,6 +49,26 @@ class _HomeState extends State<Home> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_)=>MarketScreen()
+                    )
+                  );
+                  },
+              ),
+              DrawerItem(
+                text: "Daily rated songs",
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_)=>DailyHighRatedSongScreen()
+                    )
+                  );
+                  },
+              ),
+              DrawerItem(
+                text: "All time rated songs",
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_)=>AllTimeRatingScreen()
                     )
                   );
                   },
