@@ -7,6 +7,7 @@ class CurrentUser{
   final int tokens;
   final String imageURL;
   final int tokensBought;
+  final int recievedTokens;
 
   CurrentUser({
     required this.id,
@@ -14,7 +15,8 @@ class CurrentUser{
     required this.email,
     required this.tokens,
     required this.imageURL,
-    required this.tokensBought
+    required this.tokensBought,
+    required this.recievedTokens
   });
 
   factory CurrentUser.fromDocument(DocumentSnapshot doc){
@@ -24,7 +26,8 @@ class CurrentUser{
       imageURL: doc['imageURL'],
       name: doc['name'],
       tokens: doc['token'],
-      tokensBought:doc['tokensBought']
+      tokensBought:doc['tokensBought'],
+      recievedTokens: doc['recievedTokens']
     );
   }
 }

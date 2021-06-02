@@ -66,7 +66,8 @@ class AuthenticationService with ChangeNotifier {
         'email': email,
         'token': 0,
         'imageURL': imageURL == null ? defaultImage : imageURL,
-        'tokensBought': 0
+        'tokensBought': 0,
+        'recievedTokens':0
       });
       await _firebaseAuth.currentUser!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {

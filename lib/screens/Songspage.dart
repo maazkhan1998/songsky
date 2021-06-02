@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:new_clean/model/songModel.dart';
+import 'package:new_clean/provider/authentication_service.dart';
 import 'package:new_clean/utils/AppTheme.dart';
 import 'package:new_clean/utils/SizeConfig.dart';
-
+import 'package:new_clean/widgets/dialogs.dart';
+import 'package:new_clean/widgets/singleTrackWidget.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 class Songspage extends StatefulWidget {
   final SongModel song;
 
@@ -26,6 +31,27 @@ class _SongspageState extends State<Songspage> with SingleTickerProviderStateMix
   late AnimationController _animationController;
   bool isPlaying = false;
 
+  onPress()async{
+   final provider= Provider.of<AuthenticationService>(context,listen:false);
+    try{
+      if(widget.song.userID==provider.user.id) return Fluttertoast.showToast(msg: 'Cannot give tokens to your own songs');
+      if(provider.user.tokens<=0) return Fluttertoast.showToast(msg: 'Not enough tokens');
+      progressIndicator(context);
+     await firestore.FirebaseFirestore.instance.collection('ratings').add({'donorID':provider.user.id,'songID':widget.song.songID,'date':DateTime.now().toIso8601String()});
+     await firestore.FirebaseFirestore.instance.collection('users').doc(provider.user.id).update({'token':provider.user.tokens-1});
+     await firestore.FirebaseFirestore.instance.collection('songs').doc(widget.song.songID).update({'skycoins':widget.song.coins+1});
+     final songUser=await getAnyUser(widget.song.userID);
+     await firestore.FirebaseFirestore.instance.collection('users').doc(widget.song.userID).update({'recievedTokens':songUser.recievedTokens+1,'token':songUser.tokens+1});
+    provider.getUser();
+     Navigator.of(context,rootNavigator: true).pop();
+     Fluttertoast.showToast(msg: 'Token send');
+    }
+    catch(e){
+      Navigator.of(context,rootNavigator: true).pop();
+    }
+  }
+  
+
   initAudio() {
     audioPlayer.onDurationChanged.listen((updatedDuration) {
       setState(() {
@@ -45,11 +71,6 @@ class _SongspageState extends State<Songspage> with SingleTickerProviderStateMix
 
       setState(() {});
     });
-  }
-
-  @override
-  void giveCoin() {
-    widget.song.coins + 1;
   }
 
   void initState() {
@@ -286,7 +307,7 @@ class _SongspageState extends State<Songspage> with SingleTickerProviderStateMix
                                                           .onBackground,
                                                       size: MySize.size28,
                                                     )),
-                                                onTap: giveCoin,
+                                                onTap: onPress,
                                               ),
                                             ),
                                           ),
