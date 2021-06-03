@@ -33,6 +33,8 @@ final firestoreinstance=FirebaseFirestore.instance;
 final firebaseStorage=FirebaseStorage.instance;
 double progress=0;
 
+bool canPop=true;
+
   void selectimage()async {
     final PickedFile? pickedImage=await ImagePicker().getImage(source: ImageSource.gallery);
     if(pickedImage==null){
@@ -65,6 +67,7 @@ double progress=0;
       if(songname.text.trim().isEmpty) return Fluttertoast.showToast(msg: 'Enter song name');
       if(artistname.text.trim().isEmpty) return Fluttertoast.showToast(msg: 'Enter artist name');
       progressIndicator(context);
+      canPop=false;
       List<SongModel> allSongs=[];
       final allSongsData=await firestoreinstance.collection('songs').where('userID',isEqualTo:Provider.of<AuthenticationService>(context,listen:false).user.id).get();
       allSongsData.docs.forEach((element) {
@@ -72,6 +75,7 @@ double progress=0;
       });
       if(allSongs.any((element) => element.songName==songname.text)){
         Navigator.of(context,rootNavigator: true).pop();
+        canPop=true;
         return Fluttertoast.showToast(msg: 'Song name already exists');
       }
       Navigator.of(context,rootNavigator: true).pop();
@@ -100,6 +104,7 @@ double progress=0;
           'date':DateTime.now().toIso8601String()
         });
         Navigator.of(context,rootNavigator: true).pop();
+        canPop=true;
         setState((){
           image=null;
           song=null;
@@ -109,8 +114,10 @@ double progress=0;
         });
       });
     }on FirebaseException catch(e){
+      canPop=true;
       customErrorDialog(context, 'Error', e.message!);
     }on SocketException catch(e){
+      canPop=true;
       customErrorDialog(context, 'Error', e.message);
     }
 
@@ -130,62 +137,67 @@ double progress=0;
   @override
   Widget build(BuildContext context) {
     themeData=Theme.of(context);
-    return Scaffold(
-          body: SafeArea(
-                      child: Center(
-                        child: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
-        child: Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: selectimage,
-                            child: Container(
-                              alignment: Alignment.center,
-                  height: ScreenUtil().setHeight(175),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: Colors.black,width: 1
-                    )
-                  ),
-                  child: image==null?Center(child: Text('Select image')):
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(image!,fit: BoxFit.fill,height:ScreenUtil().setHeight(175),width: double.infinity,))
-                ),
-              ),
-              SizedBox(height: ScreenUtil().setHeight(10)),
-              GestureDetector(
-                  onTap:selectsong ,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal:10),
-                    height: ScreenUtil().setHeight(40),
-                    width: ScreenUtil().setWidth(175),
+    return WillPopScope(
+      onWillPop: ()async{
+        return canPop;
+      },
+      child: Scaffold(
+            body: SafeArea(
+                        child: Center(
+                          child: SingleChildScrollView(
+          padding: EdgeInsets.all(20),
+          child: Column(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: selectimage,
+                              child: Container(
+                                alignment: Alignment.center,
+                    height: ScreenUtil().setHeight(175),
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                        color:themeData.colorScheme.primary ,
-                        borderRadius: BorderRadius.circular(5)
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: Colors.black,width: 1
+                      )
                     ),
-                    alignment: Alignment.center,
-                    child:song==null? Text('Select song'):Text(song!.name,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                    child: image==null?Center(child: Text('Select image')):
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.file(image!,fit: BoxFit.fill,height:ScreenUtil().setHeight(175),width: double.infinity,))
                   ),
                 ),
-              EmailNameTextField(text: 'Enter song name', controller: songname, type: TextInputType.name, icon: Icon(
-                MdiIcons.music
-              )),
-              EmailNameTextField(text: 'Enter artist name', controller: artistname, type: TextInputType.name, icon: Icon(
-                Icons.mic
-              )),
-              SizedBox(height:ScreenUtil().setHeight(20)),
-              LinearProgressIndicator(
-                value: progress
-              ),
-              OnSubmitButton(func: finalupload, text: 'Upload'),
-            ],
-      ),
-      ),
+                SizedBox(height: ScreenUtil().setHeight(10)),
+                GestureDetector(
+                    onTap:selectsong ,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal:10),
+                      height: ScreenUtil().setHeight(40),
+                      width: ScreenUtil().setWidth(175),
+                      decoration: BoxDecoration(
+                          color:themeData.colorScheme.primary ,
+                          borderRadius: BorderRadius.circular(5)
                       ),
-          ),
+                      alignment: Alignment.center,
+                      child:song==null? Text('Select song'):Text(song!.name,maxLines: 1,overflow: TextOverflow.ellipsis,),
+                    ),
+                  ),
+                EmailNameTextField(text: 'Enter song name', controller: songname, type: TextInputType.name, icon: Icon(
+                  MdiIcons.music
+                )),
+                EmailNameTextField(text: 'Enter artist name', controller: artistname, type: TextInputType.name, icon: Icon(
+                  Icons.mic
+                )),
+                SizedBox(height:ScreenUtil().setHeight(20)),
+                LinearProgressIndicator(
+                  value: progress
+                ),
+                OnSubmitButton(func: finalupload, text: 'Upload'),
+              ],
+        ),
+        ),
+                        ),
+            ),
+      ),
     );
   }
 }

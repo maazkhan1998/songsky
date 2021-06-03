@@ -22,8 +22,7 @@ class _RatedSongScreenState extends State<RatedSongScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
+          child:
               FutureBuilder<List<SongModel>>(
                 future: query(
                   widget.query
@@ -40,9 +39,7 @@ class _RatedSongScreenState extends State<RatedSongScreen> {
                    separatorBuilder: (context,i)=>SizedBox(height: 10,),
                     itemCount: data.data!.length);
                 },
-              )
-            ],
-          ),
+              ),
         ),
       ),
     );

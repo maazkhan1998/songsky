@@ -31,7 +31,6 @@ dependencies:
   audioplayers: ^0.19.0 
   provider: ^5.0.0 
   flutter_bloc: 
-  in_app_purchase: 
   material_design_icons_flutter:
   google_fonts:
   fluttertoast:
@@ -41,6 +40,7 @@ dependencies:
   paginate_firestore:
   pay: ^1.0.4
   http: ^0.13.3
+  flutter_native_splash: ^1.1.8+4
   
 
 
@@ -51,6 +51,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_native_splash:
+  image: assets/images/web_hi_res_512.png
+  color: "#FFFFFF"
+  fill: true
+  android_disable_fullscreen: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
