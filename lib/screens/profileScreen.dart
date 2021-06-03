@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_clean/model/songModel.dart';
-import 'package:new_clean/screens/Songspage.dart';
+import 'package:new_clean/model/userModel.dart';
 import 'package:new_clean/widgets/singleTrackWidget.dart';
 import 'package:provider/provider.dart';
 import '../provider/authentication_service.dart';
@@ -118,9 +118,8 @@ class CollectedPointsContainer extends StatelessWidget {
                           )
                         ]
                       ),
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: 
-              FirebaseFirestore.instance.collection('songs').where('userID',isEqualTo: Provider.of<AuthenticationService>(context,listen:false).user.id).orderBy('date',descending: true).snapshots(),
+                      child: FutureBuilder<DocumentSnapshot>(
+                        future:FirebaseFirestore.instance.collection('users').doc(Provider.of<AuthenticationService>(context,listen:false).user.id).get(),
               builder: (context,snapshot){
                 if(snapshot.connectionState==ConnectionState.waiting) return CircularProgressIndicator();
                 if(!snapshot.hasData) return Column(
@@ -131,19 +130,14 @@ class CollectedPointsContainer extends StatelessWidget {
                   ],
                 );
 
-                List<SongModel> songList=[];
-                snapshot.data?.docs.forEach((element) { 
-                  songList.add(SongModel.fromDocument(element));
-                });
-                int points=0;
-                songList.forEach((element)=>points+=element.coins);
+                final user=CurrentUser.fromDocument(snapshot.data!);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text('Collected Points',style:TextStyle(
                       color:Colors.white,fontSize:15,fontWeight: FontWeight.w600
                     )),
-                    Text(points.toString(),style:TextStyle(
+                    Text(user.recievedTokens.toString(),style:TextStyle(
                       color:Colors.white,fontSize:18,fontWeight: FontWeight.w600
                     ))
                   ],

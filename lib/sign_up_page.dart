@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:new_clean/utils/AppTheme.dart';
 import 'package:new_clean/utils/SizeConfig.dart';
 import 'package:new_clean/widgets/circularProfileImage.dart';
 import 'package:new_clean/widgets/emailNameTextField.dart';

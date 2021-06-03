@@ -24,8 +24,6 @@ class _SignInPageState extends State<SignInPage> {
 
   late ThemeData themeData;
 
-  bool _passwordVisible=false;
-
   onLogin()async{
     try{
       if(!validateEmail(emailController.text))return  Fluttertoast.showToast(msg: 'Invalid email');
