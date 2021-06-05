@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:new_clean/model/songModel.dart';
 import 'package:new_clean/provider/authentication_service.dart';
+import 'package:new_clean/screens/artistProfileScreen.dart';
 import 'package:new_clean/utils/AppTheme.dart';
 import 'package:new_clean/utils/SizeConfig.dart';
 import 'package:new_clean/widgets/dialogs.dart';
@@ -114,7 +115,7 @@ class _SongspageState extends State<Songspage>
                         width: MediaQuery.of(context).size.width * 0.7,
                         height: MediaQuery.of(context).size.width * 0.7,
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
                               image: NetworkImage(widget.song.imageURL),
                               fit: BoxFit.fill),
@@ -134,15 +135,22 @@ class _SongspageState extends State<Songspage>
                                   fontWeight: 600),
                             ),
                             SizedBox(height: 5),
-                            Text(
-                              widget.song.artistName,
-                              style: AppTheme.getTextStyle(
-                                  themeData.textTheme.caption!,
-                                  height: 1,
-                                  color: Colors.grey,
-                                  fontSize: 18,
-                                  fontWeight: 400,
-                                  letterSpacing: 0.3),
+                            GestureDetector(
+                              onTap: ()=>Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_)=>ArtistProfileScreen(userID: widget.song.userID)
+                                )
+                              ),
+                              child: Text(
+                                widget.song.artistName,
+                                style: AppTheme.getTextStyle(
+                                    themeData.textTheme.caption!,
+                                    height: 1,
+                                    color: Colors.grey,
+                                    fontSize: 18,
+                                    fontWeight: 400,
+                                    letterSpacing: 0.3),
+                              ),
                             )
                           ],
                         ),
@@ -336,7 +344,7 @@ onDonateToken(BuildContext context,SongModel song,int tokens) async {
       if (song.userID == provider.user.id)
         return Fluttertoast.showToast(
             msg: 'Cannot give tokens to your own songs');
-      if (provider.user.tokens <= tokens)
+      if (provider.user.tokens < tokens)
         return Fluttertoast.showToast(msg: 'Not enough tokens');
       await firestore.FirebaseFirestore.instance.collection('ratings').add({
         'donorID': provider.user.id,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,7 @@ import 'package:new_clean/widgets/emailNameTextField.dart';
 import 'package:new_clean/widgets/passwordTextField.dart';
 import 'package:provider/provider.dart';
 
+import 'model/userModel.dart';
 import 'provider/authentication_service.dart';
 import 'utils/validators.dart';
 import 'widgets/dialogs.dart';
@@ -53,6 +55,13 @@ class _SignUpPageState extends State<SignUpPage> {
       if(!validatePass(passwordController.text)) return Fluttertoast.showToast(msg:'Password must be 6 character length');
       if(passwordController.text!=passwordController2.text) return Fluttertoast.showToast(msg: 'Password does not match');
       progressIndicator(context);
+      final allUsersData=await FirebaseFirestore.instance.collection('users').get();
+      List<CurrentUser> allUsers=[];
+      allUsersData.docs.forEach((element)=>allUsers.add(CurrentUser.fromDocument(element)));
+      if(allUsers.any((element) => element.name==nameController.text)){
+        Navigator.of(context,rootNavigator: true).pop();
+         return Fluttertoast.showToast(msg: 'User Name has already been taken');
+      }
       await Provider.of<AuthenticationService>(context,listen:false).
       signUp(email: emailController.text, password: passwordController.text,name: nameController.text,image: _image);
       Navigator.of(context,rootNavigator: true).pop();

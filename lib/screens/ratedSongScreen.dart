@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_clean/model/ratingModel.dart';
 import 'package:new_clean/model/songModel.dart';
+import 'package:new_clean/screens/Songspage.dart';
 import 'package:new_clean/widgets/singleTrackWidget.dart';
 
 class RatedSongScreen extends StatefulWidget {
@@ -35,7 +36,13 @@ class _RatedSongScreenState extends State<RatedSongScreen> {
                   (
                     shrinkWrap: true,
                     physics: ClampingScrollPhysics(),
-                    itemBuilder: (context,i)=>SingleTrackWidget(song: data.data![i],),
+                    itemBuilder: (context,i)=>GestureDetector(
+                      onTap: ()=>Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_)=>Songspage(song: data.data![i])
+                        )
+                      ),
+                      child: SingleTrackWidget(song: data.data![i],)),
                    separatorBuilder: (context,i)=>SizedBox(height: 10,),
                     itemCount: data.data!.length);
                 },

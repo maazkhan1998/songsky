@@ -103,12 +103,7 @@ bool canPop=true;
         });
         Navigator.of(context,rootNavigator: true).pop();
         canPop=true;
-        setState((){
-          image=null;
-          song=null;
-          songname.text='';
-          progress=0;
-        });
+        Navigator.of(context).pop();
       });
     }on FirebaseException catch(e){
       canPop=true;
@@ -139,22 +134,24 @@ bool canPop=true;
         return canPop;
       },
       child: Scaffold(
-            body: SafeArea(
-                        child: Center(
-                          child: SingleChildScrollView(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+        ),
+            body: Center(
+              child: SingleChildScrollView(
           padding: EdgeInsets.all(20),
           child: Column(
               children: <Widget>[
                 GestureDetector(
                   onTap: selectimage,
-                              child: Container(
-                                alignment: Alignment.center,
+                  child: Container(
+                    alignment: Alignment.center,
                     height: ScreenUtil().setHeight(175),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                          color: Colors.black,width: 1
+              color: Colors.black,width: 1
                       )
                     ),
                     child: image==null?Center(child: Text('Select image')):
@@ -171,8 +168,8 @@ bool canPop=true;
                       height: ScreenUtil().setHeight(40),
                       width: ScreenUtil().setWidth(175),
                       decoration: BoxDecoration(
-                          color:themeData.colorScheme.primary ,
-                          borderRadius: BorderRadius.circular(5)
+              color:themeData.colorScheme.primary ,
+              borderRadius: BorderRadius.circular(5)
                       ),
                       alignment: Alignment.center,
                       child:song==null? Text('Select song'):Text(song!.name,maxLines: 1,overflow: TextOverflow.ellipsis,),
@@ -189,7 +186,6 @@ bool canPop=true;
               ],
         ),
         ),
-                        ),
             ),
       ),
     );

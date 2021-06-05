@@ -51,7 +51,7 @@ class _SignInPageState extends State<SignInPage> {
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/web_hi_res_512.png'),
+                image: AssetImage('assets/images/Song_Sky_Android.png'),
                 fit: BoxFit.fill
               )
             ),

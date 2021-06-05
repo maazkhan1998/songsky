@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_clean/model/songModel.dart';
 import 'package:new_clean/model/userModel.dart';
+import 'package:new_clean/screens/Songspage.dart';
 import 'package:new_clean/widgets/singleTrackWidget.dart';
 import 'package:provider/provider.dart';
 import '../provider/authentication_service.dart';
@@ -24,6 +25,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: EdgeInsets.symmetric(horizontal:20,vertical:30),
           child: Column(
             children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage('${Provider.of<AuthenticationService>(context).user.imageURL}'),
+              ),
+              SizedBox(height: 20,),
+              Text(Provider.of<AuthenticationService>(context).user.name,
+              style: TextStyle(
+                fontSize: 18,fontWeight: FontWeight.w500
+              ),),
+              SizedBox(height: 20,),
               Container(
                 width: MediaQuery.of(context).size.width,
                 child: Row(
@@ -33,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       padding: EdgeInsets.all(0),
                       alignment: Alignment.center,
-                      height: 150,width: MediaQuery.of(context).size.width*0.4,
+                      height: 80,width: MediaQuery.of(context).size.width*0.4,
                       decoration: BoxDecoration(
                         color: themeData.colorScheme.primary,
                         borderRadius: BorderRadius.circular(10),
@@ -51,10 +62,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child:Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Token Bought',style:TextStyle(
+                    Text('Available Tokens',style:TextStyle(
                       color:Colors.white,fontSize:15,fontWeight: FontWeight.w600
                     )),
-                    Text(Provider.of<AuthenticationService>(context).user.tokensBought.toString(),style:TextStyle(
+                    Text(Provider.of<AuthenticationService>(context).user.tokens.toString(),style:TextStyle(
                       color:Colors.white,fontSize:18,fontWeight: FontWeight.w600
                     ))
                   ],
@@ -79,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     physics: ClampingScrollPhysics(),
                     itemBuilder: (context,i)=>GestureDetector(
                       onTap: ()=>Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_)=>Container()
+                        builder: (_)=>Songspage(song: songs[i])
                       )),
                       child: SingleTrackWidget(song: songs[i])),
                      separatorBuilder:(context,i)=>SizedBox(height:ScreenUtil().setHeight(10)),
@@ -103,7 +114,7 @@ class CollectedPointsContainer extends StatelessWidget {
     return Container(
                       padding: EdgeInsets.all(20),
                       alignment: Alignment.center,
-                      height: 150,width: MediaQuery.of(context).size.width*0.4,
+                      height: 80,width: MediaQuery.of(context).size.width*0.4,
                       decoration: BoxDecoration(
                         color: themeData.colorScheme.primary,
                         borderRadius: BorderRadius.circular(10),

@@ -5,32 +5,37 @@ import 'package:new_clean/screens/Songspage.dart';
 import 'package:new_clean/widgets/singleTrackWidget.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 
-class AllTimeRatingScreen extends StatefulWidget {
+class ArtistProfileScreen extends StatefulWidget {
+
+  final String userID;
+
+
+  ArtistProfileScreen({required this.userID});
+
   @override
-  _AllTimeRatingScreenState createState() => _AllTimeRatingScreenState();
+  _ArtistProfileScreenState createState() => _ArtistProfileScreenState();
 }
 
-class _AllTimeRatingScreenState extends State<AllTimeRatingScreen> {
+class _ArtistProfileScreenState extends State<ArtistProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: PaginateFirestore(
           padding: EdgeInsets.all(20),
-          itemsPerPage: 20,
-          isLive: true,
           separator: SizedBox(height: 10,),
+          query: FirebaseFirestore.instance.collection('songs').where('userID',isEqualTo: widget.userID).orderBy('date',descending: true),
+          isLive: true,
           itemBuilderType: PaginateBuilderType.listView,
-          query: FirebaseFirestore.instance.collection('songs').orderBy('skycoins',descending: true),
           itemBuilder: (i,context,doc){
             final song=SongModel.fromDocument(doc);
             return GestureDetector(
               onTap: ()=>Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_)=>Songspage(song: song)
+                  builder: (_)=>Songspage(song: song,)
                 )
               ),
-              child: SingleTrackWidget(song: song,));
+              child: SingleTrackWidget(song: song));
           },
         ),
       ),
