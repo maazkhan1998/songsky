@@ -24,7 +24,6 @@ class Upload extends StatefulWidget {
 
 class _UploadState extends State<Upload> {
   TextEditingController songname=TextEditingController();
-  TextEditingController artistname=TextEditingController();
 
 File? image,song;
 late String imagepath,songpath;
@@ -65,7 +64,6 @@ bool canPop=true;
     try{
       if(song==null) return Fluttertoast.showToast(msg: 'Select a song');
       if(songname.text.trim().isEmpty) return Fluttertoast.showToast(msg: 'Enter song name');
-      if(artistname.text.trim().isEmpty) return Fluttertoast.showToast(msg: 'Enter artist name');
       progressIndicator(context);
       canPop=false;
       List<SongModel> allSongs=[];
@@ -96,7 +94,7 @@ bool canPop=true;
         }
         await firestoreinstance.collection('songs').add({
           'song_name':songname.text,
-          'artist_name':artistname.text,
+          'artist_name':Provider.of<AuthenticationService>(context,listen:false).user.name,
           'song_url':songURL,
           'image_url':image==null?defaultSongImage:imageURL,
           'skycoins':0,
@@ -109,7 +107,6 @@ bool canPop=true;
           image=null;
           song=null;
           songname.text='';
-          artistname.text='';
           progress=0;
         });
       });
@@ -183,9 +180,6 @@ bool canPop=true;
                   ),
                 EmailNameTextField(text: 'Enter song name', controller: songname, type: TextInputType.name, icon: Icon(
                   MdiIcons.music
-                )),
-                EmailNameTextField(text: 'Enter artist name', controller: artistname, type: TextInputType.name, icon: Icon(
-                  Icons.mic
                 )),
                 SizedBox(height:ScreenUtil().setHeight(20)),
                 LinearProgressIndicator(
