@@ -53,9 +53,15 @@ Future<List<SongModel>> query(Future<QuerySnapshot> query)async{
       ratingsData.docs.forEach((element)=>ratingList.add(RatingsModel.fromDocument(element)));
       List<String> ratingSongIDList=[];
       ratingList.forEach((element)=>ratingSongIDList.add(element.songID));
-      List<String> ratingSongsFilteredList=ratingSongIDList.toSet().toList();
+      List<String> ratingSongsIDFilteredList=ratingSongIDList.toSet().toList();
       final Map<String,int> map={};
-      ratingSongsFilteredList.forEach((element)=>map.addAll({element:ratingSongIDList.where((element2) => element2==element).toList().length}));
+      ratingSongsIDFilteredList.forEach((element) {
+        List<RatingsModel> tempList=[];
+        tempList=ratingList.where((element2) => element==element2.songID).toList();
+        int tokens=0;
+        tempList.forEach((element3) =>tokens+=element3.tokens);
+        map.addAll({element:tokens});
+      });
       final sortedKey=map.keys.toList(growable: false)..sort((k1,k2)=>map[k1]!.compareTo(map[k2]!));
       final sortedMap=Map<String,int>.fromIterable(sortedKey,key: (k) => k, value: (k) => map[k]!);
       final List<String> sortedSongIDList=sortedMap.keys.toList().reversed.toList();

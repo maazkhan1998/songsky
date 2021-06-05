@@ -29,43 +29,6 @@ class _SongspageState extends State<Songspage>
   late AnimationController _animationController;
   bool isPlaying = false;
 
-  onPress() async {
-    final provider = Provider.of<AuthenticationService>(context, listen: false);
-    try {
-      if (widget.song.userID == provider.user.id)
-        return Fluttertoast.showToast(
-            msg: 'Cannot give tokens to your own songs');
-      if (provider.user.tokens <= 0)
-        return Fluttertoast.showToast(msg: 'Not enough tokens');
-      progressIndicator(context);
-      await firestore.FirebaseFirestore.instance.collection('ratings').add({
-        'donorID': provider.user.id,
-        'songID': widget.song.songID,
-        'date': DateTime.now().toIso8601String()
-      });
-      await firestore.FirebaseFirestore.instance
-          .collection('users')
-          .doc(provider.user.id)
-          .update({'token': provider.user.tokens - 1});
-      await firestore.FirebaseFirestore.instance
-          .collection('songs')
-          .doc(widget.song.songID)
-          .update({'skycoins': widget.song.coins + 1});
-      final songUser = await getAnyUser(widget.song.userID);
-      await firestore.FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.song.userID)
-          .update({
-        'recievedTokens': songUser.recievedTokens + 1,
-        'token': songUser.tokens + 1
-      });
-      provider.getUser();
-      Navigator.of(context, rootNavigator: true).pop();
-      Fluttertoast.showToast(msg: 'Token send');
-    } catch (e) {
-      Navigator.of(context, rootNavigator: true).pop();
-    }
-  }
 
   initAudio() {
     audioPlayer.onDurationChanged.listen((updatedDuration) {
@@ -310,7 +273,7 @@ class _SongspageState extends State<Songspage>
                                                     .colorScheme.onBackground,
                                                 size: MySize.size28,
                                               )),
-                                          onTap: onPress,
+                                          onTap:()=> tokenDialog(context,widget.song),
                                         ),
                                       ),
                                     ),
@@ -366,6 +329,44 @@ class _SongspageState extends State<Songspage>
     );
   }
 }
+
+onDonateToken(BuildContext context,SongModel song,int tokens) async {
+    final provider = Provider.of<AuthenticationService>(context, listen: false);
+    try {
+      if (song.userID == provider.user.id)
+        return Fluttertoast.showToast(
+            msg: 'Cannot give tokens to your own songs');
+      if (provider.user.tokens <= tokens)
+        return Fluttertoast.showToast(msg: 'Not enough tokens');
+      await firestore.FirebaseFirestore.instance.collection('ratings').add({
+        'donorID': provider.user.id,
+        'songID': song.songID,
+        'date': DateTime.now().toIso8601String(),
+        'tokens':tokens
+      });
+      await firestore.FirebaseFirestore.instance
+          .collection('users')
+          .doc(provider.user.id)
+          .update({'token': provider.user.tokens - tokens});
+      await firestore.FirebaseFirestore.instance
+          .collection('songs')
+          .doc(song.songID)
+          .update({'skycoins': song.coins + tokens});
+      final songUser = await getAnyUser(song.userID);
+      await firestore.FirebaseFirestore.instance
+          .collection('users')
+          .doc(song.userID)
+          .update({
+        'recievedTokens': songUser.recievedTokens + tokens,
+        'token': songUser.tokens + tokens
+      });
+      provider.getUser();
+      Fluttertoast.showToast(msg: 'Token send');
+    } catch (e) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
+
 
 class _Clipper extends CustomClipper<Path> {
   @override

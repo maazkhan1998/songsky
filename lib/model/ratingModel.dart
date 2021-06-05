@@ -5,9 +5,10 @@ class RatingsModel{
   final String songID;
   final String donorID;
   final String date;
+  final int tokens;
 
   RatingsModel({
-    required this.id,required this.songID,required this.donorID,required this.date
+    required this.id,required this.songID,required this.donorID,required this.date,required this.tokens
   });
 
   factory RatingsModel.fromDocument(DocumentSnapshot doc){
@@ -15,7 +16,8 @@ class RatingsModel{
       id: doc.id,
       date: doc['date'],
       donorID: doc['donorID'],
-      songID: doc['songID']
+      songID: doc['songID'],
+      tokens: doc['tokens']
     );
   }
 }

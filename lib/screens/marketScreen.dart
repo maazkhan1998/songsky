@@ -23,11 +23,6 @@ class _MarketScreenState extends State<MarketScreen> {
   'gPay.json'
 ]);
 
-bool isNumeric(String s) {
-
- return int.tryParse(s) != null;
-}
-
 
  onGooglePayPressed() async {
   if(!isNumeric(controller.text)) return Fluttertoast.showToast(msg: 'Invalid input');
@@ -89,4 +84,9 @@ bool isNumeric(String s) {
   ),
     );
   }
+}
+
+bool isNumeric(String s) {
+
+ return int.tryParse(s) != null;
 }
